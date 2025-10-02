@@ -5,7 +5,7 @@ CREATE OR REPLACE MODEL `ecommerce.classification_model`
 OPTIONS
 (
 model_type="logistic_reg",
-labels = ["will_buy_on_return_visit"]
+input_label_cols = ["will_buy_on_return_visit"]
 )
 AS
 #standardSQL
@@ -68,7 +68,7 @@ FROM
 bq query --nouse_legacy_sql '
 CREATE OR REPLACE MODEL `ecommerce.classification_model_2`
 OPTIONS
-  (model_type="logistic_reg", labels = ["will_buy_on_return_visit"]) AS
+  (model_type="logistic_reg", input_label_cols  = ["will_buy_on_return_visit"]) AS
 WITH all_visitor_stats AS (
 SELECT
   fullvisitorid,
@@ -80,7 +80,7 @@ SELECT
 SELECT * EXCEPT(unique_session_id) FROM (
   SELECT
       CONCAT(fullvisitorid, CAST(visitId AS STRING)) AS unique_session_id,
-      # labels
+      # input_label_cols 
       will_buy_on_return_visit,
       MAX(CAST(h.eCommerceAction.action_type AS INT64)) AS latest_ecommerce_progress,
       # behavior on the site
@@ -138,7 +138,7 @@ SELECT
 SELECT * EXCEPT(unique_session_id) FROM (
   SELECT
       CONCAT(fullvisitorid, CAST(visitId AS STRING)) AS unique_session_id,
-      # labels
+      # input_label_cols 
       will_buy_on_return_visit,
       MAX(CAST(h.eCommerceAction.action_type AS INT64)) AS latest_ecommerce_progress,
       # behavior on the site
@@ -189,7 +189,7 @@ SELECT
 )
   SELECT
       CONCAT(fullvisitorid, "-",CAST(visitId AS STRING)) AS unique_session_id,
-      # labels
+      # input_label_cols 
       will_buy_on_return_visit,
       MAX(CAST(h.eCommerceAction.action_type AS INT64)) AS latest_ecommerce_progress,
       # behavior on the site
